@@ -1,3 +1,14 @@
+type time = 'morning' | 'afternoon' | 'evening' | 'night';
+type sex = 'male' | 'female';
+type allowedLanguage = 'indo' | 'english';
+
+export interface greetParam {
+  name?: string;
+  time?: time;
+  sex?: sex;
+  lang?: allowedLanguage;
+}
+
 export class User {
   name: string;
   static savedUsers: User[];
@@ -9,73 +20,32 @@ export class User {
     this.friends = [];
   }
 
-  greet(
-    name?: string,
-    isMale?: boolean,
-    isFemale?: boolean,
-    isMorning?: boolean,
-    isAfternoon?: boolean,
-    isEvening?: boolean,
-    isNight?: boolean,
-    lang?: 'indo'
-  ) {
+  greetIndo(greetTime: greetParam) {
+    const { time, sex, name } = greetTime;
+    const isMale = sex === 'male';
+    const isFemale = sex === 'female';
+
+    return `${time ? 'Selamat pagi' : 'Halo'} ${
+      isMale ? 'Pak' : isFemale ? 'Bu' : ''
+    } ${name}`;
+  }
+  greetEng(greetTime: greetParam) {
+    const { time, sex, name } = greetTime;
+    const isMale = sex === 'male';
+    const isFemale = sex === 'female';
+
+    return `${time ? `Good ${time}` : 'wassup'} ${
+      isMale ? 'Mr ' : isFemale ? 'Ms ' : ''
+    }${name}`;
+  }
+
+  greet(greetParam: greetParam) {
+    const { lang, name, sex, time } = greetParam;
     if (lang === 'indo') {
-      if (isMorning) {
-        if (isFemale) {
-          return `Selamat pagi Bu ${name}`;
-        }
-
-        if (isMale) {
-          return `Selamat pagi Pak ${name}`;
-        }
-
-        return `Selamat pagi ${name}`;
-      }
-
-      if (isMale) {
-        return `Halo Pak ${name}`;
-      }
-
-      if (isFemale) {
-        return `Halo Bu ${name}`;
-      }
-
-      return `Halo ${name}`;
+      return this.greetIndo({ lang, name, sex, time });
     }
 
-    if (isMorning) {
-      if (isMale && isFemale) {
-        return `Good morning ${name}`;
-      }
-
-      if (isFemale) {
-        return `Good morning Ms ${name}`;
-      }
-
-      return `Good morning ${name}`;
-    }
-
-    if (isAfternoon) {
-      return `good afternoon ${name}`;
-    }
-
-    if (isEvening) {
-      return `good evening ${name}`;
-    }
-
-    if (isNight) {
-      return `good night ${name}`;
-    }
-
-    if (isMale) {
-      return `wassup Mr ${name}`;
-    }
-
-    if (isFemale) {
-      return `wassup Ms ${name}`;
-    }
-
-    return `wassup ${name}`;
+    return this.greetEng({ lang, name, sex, time });
   }
 
   static saveToDatabase(user: User) {
