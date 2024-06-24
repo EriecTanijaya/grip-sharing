@@ -2,12 +2,13 @@ export type GreetInput = Partial<{
   name: string;
   isMale: boolean;
   isFemale: boolean;
-  isMorning: boolean;
-  isAfternoon: boolean;
-  isEvening: boolean;
-  isNight: boolean;
-  lang: 'indo';
+  lang: Language;
+  time: Time;
 }>;
+
+type Language = 'indo';
+
+type Time = 'morning' | 'afternoon' | 'evening' | 'night';
 
 export class User {
   name: string;
@@ -19,13 +20,21 @@ export class User {
   }
 
   greet(input?: GreetInput) {
-    const { lang, isMorning, isFemale, isMale, isAfternoon, isEvening, isNight, name } = input || {};
+    const { lang, isFemale, isMale, name, time } = input || {};
 
     const isBothMaleAndFemale = isMale && isFemale;
 
     const hasGender = isMale || isFemale;
 
-    const hasTimeSpecified = isMorning || isAfternoon || isEvening || isNight;
+    const isMorning = time === 'morning';
+
+    const isAfternoon = time === 'afternoon';
+
+    const isEvening = time === 'evening';
+
+    const isNight = time === 'night';
+
+    const hasTimeSpecified = !!time;
 
     if (!input || isBothMaleAndFemale || !hasGender) {
       if (!hasTimeSpecified) {

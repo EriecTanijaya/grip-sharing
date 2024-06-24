@@ -48,25 +48,25 @@ describe('User', () => {
   });
 
   test('should able to greet good morning when current time is morning', () => {
-    const greeting = user.greet({ name: 'fofo', isMorning: true });
+    const greeting = user.greet({ name: 'fofo', time: 'morning' });
 
     expect(greeting).toContain(`morning`);
   });
 
   test('should able to greet good afternoon when current time is afternoon', () => {
-    const greeting = user.greet({ name: 'fofo', isAfternoon: true });
+    const greeting = user.greet({ name: 'fofo', time: 'afternoon' });
 
     expect(greeting).toContain(`afternoon`);
   });
 
   test('should able to greet good evening when current time is evening', () => {
-    const greeting = user.greet({ name: 'fofo', isEvening: true });
+    const greeting = user.greet({ name: 'fofo', time: 'evening' });
 
     expect(greeting).toContain(`evening`);
   });
 
   test('should able to greet good night when current time is night', () => {
-    const greeting = user.greet({ name: 'fofo', isNight: true });
+    const greeting = user.greet({ name: 'fofo', time: 'night' });
 
     expect(greeting).toContain(`night`);
   });
@@ -110,7 +110,7 @@ describe('User', () => {
   });
 
   test('should able to greet morning with indonesian language', () => {
-    const greeting = user.greet({ name: 'Fifi', isMorning: true, lang: 'indo' });
+    const greeting = user.greet({ name: 'Fifi', time: 'morning', lang: 'indo' });
 
     expect(greeting).toContain(`Selamat pagi`);
   });
@@ -118,7 +118,7 @@ describe('User', () => {
   test('should able to greet morning to female in indonesian language', () => {
     const femaleName = 'Fifi';
 
-    const greeting = user.greet({ name: femaleName, isMorning: true, lang: 'indo', isFemale: true });
+    const greeting = user.greet({ name: femaleName, time: 'morning', lang: 'indo', isFemale: true });
 
     expect(greeting).toContain(`Selamat pagi Bu ${femaleName}`);
   });
@@ -126,7 +126,7 @@ describe('User', () => {
   test('should able to greet morning to male in indonesian language', () => {
     const maleName = 'Budi';
 
-    const greeting = user.greet({ name: maleName, isMorning: true, lang: 'indo', isMale: true });
+    const greeting = user.greet({ name: maleName, time: 'morning', lang: 'indo', isMale: true });
 
     expect(greeting).toContain(`Selamat pagi Pak ${maleName}`);
   });
@@ -134,7 +134,7 @@ describe('User', () => {
   test('should able to greet morning to female in english language', () => {
     const femaleName = 'Fifi';
 
-    const greeting = user.greet({ name: femaleName, isMorning: true, isFemale: true });
+    const greeting = user.greet({ name: femaleName, time: 'morning', isFemale: true });
 
     expect(greeting).toContain(`Good morning Ms ${femaleName}`);
   });
@@ -142,7 +142,7 @@ describe('User', () => {
   test('Given other user is male and female, When greet morning in english language, Then should greet without title', () => {
     const otherUser = new User('Heho');
 
-    const greeting = user.greet({ name: otherUser.name, isMale: true, isFemale: true, isMorning: true });
+    const greeting = user.greet({ name: otherUser.name, isMale: true, isFemale: true, time: 'morning' });
 
     expect(greeting).not.toContain(`Mr`);
     expect(greeting).not.toContain(`Ms`);
