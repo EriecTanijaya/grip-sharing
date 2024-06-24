@@ -6,7 +6,7 @@ export type GreetInput = Partial<{
   time: Time;
 }>;
 
-type Language = 'indo';
+type Language = 'indo' | 'eng';
 
 type Time = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -21,17 +21,16 @@ const timeGreeting: TimeGreetingInLanguage = {
     morning: 'Selamat pagi',
     night: 'Selamat malam',
   },
+  eng: {
+    afternoon: 'Good afternoon',
+    evening: 'Good evening',
+    morning: 'Good morning',
+    night: 'Good night',
+  },
 };
 
 type TimeGreeting = {
   [time in Time]: string;
-};
-
-const defaultTimeGreeting: TimeGreeting = {
-  afternoon: 'Good afternoon',
-  evening: 'Good evening',
-  morning: 'Good morning',
-  night: 'Good night',
 };
 
 export class User {
@@ -43,15 +42,18 @@ export class User {
     this.friends = [];
   }
 
-  private getTimeGreeting(time: Time, lang?: Language) {
-    if (!lang || lang !== 'indo') {
-      return defaultTimeGreeting[time];
-    }
+  private getTimeGreeting(time: Time, lang: Language) {
     return timeGreeting[lang][time];
   }
 
+  private getDefaultGreeting(lang: Language) {
+    let baseGreet = lang === 'indo' ? `Halo` : `wassup`;
+
+    return baseGreet;
+  }
+
   greet(input?: GreetInput) {
-    const { lang, isFemale, isMale, name, time } = input || {};
+    const { lang = 'eng', isFemale, isMale, name, time } = input || {};
 
     const isBothMaleAndFemale = isMale && isFemale;
 
@@ -59,16 +61,11 @@ export class User {
 
     const hasTimeSpecified = !!time;
 
-    if (!input || isBothMaleAndFemale || !hasGender) {
-      if (!hasTimeSpecified) {
-        if (lang === 'indo') {
-          return `Halo ${name}`;
-        }
-        return `wassup ${name}`;
-      }
-    }
+    const baseGreeting = hasTimeSpecified ? this.getTimeGreeting(time, lang) : this.getDefaultGreeting(lang);
 
-    const baseGreeting = hasTimeSpecified && this.getTimeGreeting(time, lang);
+    if (!name) {
+      return baseGreeting;
+    }
 
     if (isBothMaleAndFemale || !hasGender) {
       return `${baseGreeting} ${name}`;
