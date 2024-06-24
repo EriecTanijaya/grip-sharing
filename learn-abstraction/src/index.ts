@@ -10,6 +10,30 @@ type Language = 'indo';
 
 type Time = 'morning' | 'afternoon' | 'evening' | 'night';
 
+type TimeGreetingInLanguage = {
+  [lang in Language]: TimeGreeting;
+};
+
+const timeGreeting: TimeGreetingInLanguage = {
+  indo: {
+    afternoon: 'Selamat siang',
+    evening: 'Selamat sore',
+    morning: 'Selamat pagi',
+    night: 'Selamat malam',
+  },
+};
+
+type TimeGreeting = {
+  [time in Time]: string;
+};
+
+const defaultTimeGreeting: TimeGreeting = {
+  afternoon: 'Good afternoon',
+  evening: 'Good evening',
+  morning: 'Good morning',
+  night: 'Good night',
+};
+
 export class User {
   name: string;
   friends: User[];
@@ -19,20 +43,19 @@ export class User {
     this.friends = [];
   }
 
+  private getTimeGreeting(time: Time, lang?: Language) {
+    if (!lang || lang !== 'indo') {
+      return defaultTimeGreeting[time];
+    }
+    return timeGreeting[lang][time];
+  }
+
   greet(input?: GreetInput) {
     const { lang, isFemale, isMale, name, time } = input || {};
 
     const isBothMaleAndFemale = isMale && isFemale;
 
     const hasGender = isMale || isFemale;
-
-    const isMorning = time === 'morning';
-
-    const isAfternoon = time === 'afternoon';
-
-    const isEvening = time === 'evening';
-
-    const isNight = time === 'night';
 
     const hasTimeSpecified = !!time;
 
@@ -45,58 +68,26 @@ export class User {
       }
     }
 
-    if (lang === 'indo') {
-      if (isMorning) {
-        if (isFemale) {
-          return `Selamat pagi Bu ${name}`;
-        }
+    const baseGreeting = hasTimeSpecified && this.getTimeGreeting(time, lang);
 
-        if (isMale) {
-          return `Selamat pagi Pak ${name}`;
-        }
-
-        return `Selamat pagi ${name}`;
-      }
-
-      if (isMale) {
-        return `Halo Pak ${name}`;
-      }
-
-      if (isFemale) {
-        return `Halo Bu ${name}`;
-      }
-    }
-
-    if (isMorning) {
-      if (isMale && isFemale) {
-        return `Good morning ${name}`;
-      }
-
-      if (isFemale) {
-        return `Good morning Ms ${name}`;
-      }
-
-      return `Good morning ${name}`;
-    }
-
-    if (isAfternoon) {
-      return `good afternoon ${name}`;
-    }
-
-    if (isEvening) {
-      return `good evening ${name}`;
-    }
-
-    if (isNight) {
-      return `good night ${name}`;
-    }
-
-    if (isMale) {
-      return `wassup Mr ${name}`;
+    if (isBothMaleAndFemale || !hasGender) {
+      return `${baseGreeting} ${name}`;
     }
 
     if (isFemale) {
-      return `wassup Ms ${name}`;
+      if (lang === 'indo') {
+        return `${baseGreeting} Bu ${name}`;
+      } else {
+        return `${baseGreeting} Ms ${name}`;
+      }
+    }
+
+    if (isMale) {
+      if (lang === 'indo') {
+        return `${baseGreeting} Pak ${name}`;
+      } else {
+        return `${baseGreeting} Mr ${name}`;
+      }
     }
   }
 
