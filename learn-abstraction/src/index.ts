@@ -1,22 +1,26 @@
+type GreetInput = {
+  name: string;
+  isMale: boolean;
+  isFemale: boolean;
+  isMorning: boolean;
+  isAfternoon: boolean;
+  isEvening: boolean;
+  isNight: boolean;
+  lang: 'indo';
+};
+
 export class User {
   name: string;
   friends: User[];
 
-  constructor(name: string, savedUsers?: User[]) {
+  constructor(name: string) {
     this.name = name;
     this.friends = [];
   }
 
-  greet(
-    name?: string,
-    isMale?: boolean,
-    isFemale?: boolean,
-    isMorning?: boolean,
-    isAfternoon?: boolean,
-    isEvening?: boolean,
-    isNight?: boolean,
-    lang?: 'indo'
-  ) {
+  greet(input?: Partial<GreetInput>) {
+    const { lang, isMorning, isFemale, isMale, isAfternoon, isEvening, isNight, name } = input || {};
+
     if (lang === 'indo') {
       if (isMorning) {
         if (isFemale) {
@@ -63,6 +67,10 @@ export class User {
 
     if (isNight) {
       return `good night ${name}`;
+    }
+
+    if (isMale && isFemale) {
+      return `wassup ${name}`;
     }
 
     if (isMale) {
