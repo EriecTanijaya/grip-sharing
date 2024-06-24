@@ -21,6 +21,21 @@ export class User {
   greet(input?: GreetInput) {
     const { lang, isMorning, isFemale, isMale, isAfternoon, isEvening, isNight, name } = input || {};
 
+    const isBothMaleAndFemale = isMale && isFemale;
+
+    const hasGender = isMale || isFemale;
+
+    const hasTimeSpecified = isMorning || isAfternoon || isEvening || isNight;
+
+    if (!input || isBothMaleAndFemale || !hasGender) {
+      if (!hasTimeSpecified) {
+        if (lang === 'indo') {
+          return `Halo ${name}`;
+        }
+        return `wassup ${name}`;
+      }
+    }
+
     if (lang === 'indo') {
       if (isMorning) {
         if (isFemale) {
@@ -41,8 +56,6 @@ export class User {
       if (isFemale) {
         return `Halo Bu ${name}`;
       }
-
-      return `Halo ${name}`;
     }
 
     if (isMorning) {
@@ -69,10 +82,6 @@ export class User {
       return `good night ${name}`;
     }
 
-    if (isMale && isFemale) {
-      return `wassup ${name}`;
-    }
-
     if (isMale) {
       return `wassup Mr ${name}`;
     }
@@ -80,8 +89,6 @@ export class User {
     if (isFemale) {
       return `wassup Ms ${name}`;
     }
-
-    return `wassup ${name}`;
   }
 
   addFriend(user: User) {
