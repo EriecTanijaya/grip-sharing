@@ -1,4 +1,4 @@
-type GreetInput = {
+export type GreetInput = Partial<{
   name: string;
   isMale: boolean;
   isFemale: boolean;
@@ -7,7 +7,7 @@ type GreetInput = {
   isEvening: boolean;
   isNight: boolean;
   lang: 'indo';
-};
+}>;
 
 export class User {
   name: string;
@@ -18,7 +18,7 @@ export class User {
     this.friends = [];
   }
 
-  greet(input?: Partial<GreetInput>) {
+  greet(input?: GreetInput) {
     const { lang, isMorning, isFemale, isMale, isAfternoon, isEvening, isNight, name } = input || {};
 
     if (lang === 'indo') {
