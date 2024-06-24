@@ -52,12 +52,23 @@ export class User {
     return baseGreet;
   }
 
-  greet(input?: GreetInput) {
-    const { lang = 'eng', isFemale, isMale, name, time } = input || {};
-
+  private getHonorific({ lang, isMale, isFemale }: { lang: Language; isMale: boolean; isFemale: boolean }) {
     const isBothMaleAndFemale = isMale && isFemale;
-
     const hasGender = isMale || isFemale;
+
+    if (isBothMaleAndFemale || !hasGender) {
+      return '';
+    }
+
+    if (lang === 'eng') {
+      return isMale ? `Mr` : `Ms`;
+    } else {
+      return isMale ? `Pak` : `Bu`;
+    }
+  }
+
+  greet(input?: GreetInput) {
+    const { lang = 'eng', isFemale = false, isMale = false, name, time } = input || {};
 
     const hasTimeSpecified = !!time;
 
@@ -67,25 +78,9 @@ export class User {
       return baseGreeting;
     }
 
-    if (isBothMaleAndFemale || !hasGender) {
-      return `${baseGreeting} ${name}`;
-    }
+    const honorific = this.getHonorific({ lang, isMale, isFemale });
 
-    if (isFemale) {
-      if (lang === 'indo') {
-        return `${baseGreeting} Bu ${name}`;
-      } else {
-        return `${baseGreeting} Ms ${name}`;
-      }
-    }
-
-    if (isMale) {
-      if (lang === 'indo') {
-        return `${baseGreeting} Pak ${name}`;
-      } else {
-        return `${baseGreeting} Mr ${name}`;
-      }
-    }
+    return honorific ? `${baseGreeting} ${honorific} ${name}` : `${baseGreeting} ${name}`;
   }
 
   addFriend(user: User) {
