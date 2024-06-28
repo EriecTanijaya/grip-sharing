@@ -1,4 +1,7 @@
 import { User } from '.';
+import { UserGender } from './genderEnum';
+import { GreetTime } from './greetEnum';
+import { Language } from './languageEnum';
 
 let user: User;
 
@@ -28,121 +31,132 @@ describe('User', () => {
   });
 
   test('should able to greet by name', () => {
-    const calledName = 'Fofo';
+    const fofoUser = new User('fofo');
 
-    const greeting = user.greet(calledName);
+    const greeting = user.greet(fofoUser);
 
-    expect(greeting).toContain(calledName);
+    expect(greeting).toContain(fofoUser.name);
   });
 
   test('should able to greet by male gender', () => {
-    const greeting = user.greet('fofo', true);
+    const fofoUser = new User('fofo', UserGender.MALE);
+    const greeting = user.greet(fofoUser);
 
     expect(greeting).toContain('Mr');
   });
 
   test('should able to greet by female gender', () => {
-    const greeting = user.greet('fofo', false, true);
+    const fofoUser = new User('fofo', UserGender.FEMALE);
+    const greeting = user.greet(fofoUser);
 
     expect(greeting).toContain('Ms');
   });
 
   test('should able to greet good morning when current time is morning', () => {
-    const greeting = user.greet('fofo', false, true, true);
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser, GreetTime.MORNING);
 
     expect(greeting).toContain(`morning`);
   });
 
   test('should able to greet good afternoon when current time is afternoon', () => {
-    const greeting = user.greet('fofo', false, true, false, true);
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser, GreetTime.AFTERNOON);
 
     expect(greeting).toContain(`afternoon`);
   });
 
   test('should able to greet good evening when current time is evening', () => {
-    const greeting = user.greet('fofo', false, true, false, false, true);
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser, GreetTime.EVENING);
 
     expect(greeting).toContain(`evening`);
   });
 
   test('should able to greet good night when current time is night', () => {
-    const greeting = user.greet('fofo', false, true, false, false, false, true);
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser, GreetTime.NIGHT);
 
     expect(greeting).toContain(`night`);
   });
 
-  test('should only call by name when the gender is male and female', () => {
-    const greeting = user.greet('fofo', true, true, true, false, false, true);
+  test('should only call by name when the gender is male and female', () => { // WHY CAN A USER HAS 2 GEMDER?
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser);
 
     expect(greeting).not.toContain(`Mr`);
     expect(greeting).not.toContain(`Ms`);
   });
 
   test('should only call by name when the gender is not male and not female', () => {
-    const greeting = user.greet('fofo', false, false, true, false, false, true);
+    const fofoUser = new User('fofo');
+    const greeting = user.greet(fofoUser);
 
     expect(greeting).not.toContain(`Mr`);
     expect(greeting).not.toContain(`Ms`);
   });
 
   test('should able to greet by indonesian language', () => {
-    const greeting = user.greet('Fifi', false, false, false, false, false, false, 'indo');
+    const greeting = user.greet(null, null, Language.INDONESIAN)
 
-    expect(greeting).toContain(`Halo`);
+    expect(greeting).toContain(`Halo hehe`);
   });
 
   test('should greet by english language by default', () => {
-    const greeting = user.greet();
+    const greeting = user.greet(null, null, Language.ENGLISH);
 
     expect(greeting).toContain('wassup');
   });
 
   test('should able to greet male with indonesian language', () => {
-    const greeting = user.greet('Fifi', true, false, false, false, false, false, 'indo');
+    const fifiUser = new User('Fifi', UserGender.MALE);
+    const greeting = user.greet(fifiUser,null, Language.INDONESIAN);
 
     expect(greeting).toContain(`Pak`);
   });
 
   test('should able to greet female with indonesian language', () => {
-    const greeting = user.greet('Fifi', false, true, false, false, false, false, 'indo');
+    const fifiUser = new User('Fifi', UserGender.FEMALE);
+    const greeting = user.greet(fifiUser,null, Language.INDONESIAN);
 
     expect(greeting).toContain(`Bu`);
   });
 
   test('should able to greet morning with indonesian language', () => {
-    const greeting = user.greet('Fifi', false, true, true, false, false, false, 'indo');
+    const fifiUser = new User('Fifi', UserGender.FEMALE);
+    const greeting = user.greet(fifiUser, GreetTime.MORNING, Language.INDONESIAN);
 
     expect(greeting).toContain(`Selamat pagi`);
   });
 
   test('should able to greet morning to female in indonesian language', () => {
-    const femaleName = 'Fifi';
+    const fifiUser = new User('Fifi', UserGender.FEMALE);
 
-    const greeting = user.greet(femaleName, false, true, true, false, false, false, 'indo');
+    const greeting = user.greet(fifiUser, GreetTime.MORNING, Language.INDONESIAN);
 
-    expect(greeting).toContain(`Selamat pagi Bu ${femaleName}`);
+    expect(greeting).toContain(`Selamat pagi Bu ${fifiUser.name}`);
   });
 
   test('should able to greet morning to male in indonesian language', () => {
-    const maleName = 'Budi';
+    const budiUser = new User('Budi', UserGender.MALE);
 
-    const greeting = user.greet(maleName, true, false, true, false, false, false, 'indo');
+    const greeting = user.greet(budiUser, GreetTime.MORNING, Language.INDONESIAN);
 
-    expect(greeting).toContain(`Selamat pagi Pak ${maleName}`);
+    expect(greeting).toContain(`Selamat pagi Pak ${budiUser.name}`);
   });
 
   test('should able to greet morning to female in english language', () => {
-    const femaleName = 'Fifi';
+    const fifiUser = new User('Fifi', UserGender.FEMALE);
 
-    const greeting = user.greet(femaleName, false, true, true, false, false, false);
+    const greeting = user.greet(fifiUser, GreetTime.MORNING, Language.ENGLISH);
 
-    expect(greeting).toContain(`Good morning Ms ${femaleName}`);
+    expect(greeting).toContain(`Good morning Ms ${fifiUser.name}`);
   });
 
   test('Given other user is male and female, When greet morning in english language, Then should greet without title', () => {
     const otherUser = new User('Heho');
 
-    const greeting = user.greet(otherUser.name, true, true, true, false, false, false);
+    const greeting = user.greet(otherUser, GreetTime.MORNING, Language.ENGLISH);
 
     expect(greeting).not.toContain(`Mr`);
     expect(greeting).not.toContain(`Ms`);

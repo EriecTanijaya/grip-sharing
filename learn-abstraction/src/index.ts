@@ -1,81 +1,29 @@
+import { UserGender, getUserGreet } from "./genderEnum";
+import { GreetTime, getGreetTime } from "./greetEnum";
+import { Language } from "./languageEnum";
+
 export class User {
   name: string;
+  gender?: UserGender;
+
+  
   static savedUsers: User[];
   friends: User[];
 
-  constructor(name: string, savedUsers?: User[]) {
+  constructor(name: string, gender?: UserGender, savedUsers?: User[]) {
     this.name = name;
+    this.gender = gender;
     User.savedUsers = savedUsers || [];
     this.friends = [];
   }
 
   greet(
-    name?: string,
-    isMale?: boolean,
-    isFemale?: boolean,
-    isMorning?: boolean,
-    isAfternoon?: boolean,
-    isEvening?: boolean,
-    isNight?: boolean,
-    lang?: 'indo'
+    user?: User | null, time?: GreetTime | null, language: Language = Language.ENGLISH, 
   ) {
-    if (lang === 'indo') {
-      if (isMorning) {
-        if (isFemale) {
-          return `Selamat pagi Bu ${name}`;
-        }
-
-        if (isMale) {
-          return `Selamat pagi Pak ${name}`;
-        }
-
-        return `Selamat pagi ${name}`;
-      }
-
-      if (isMale) {
-        return `Halo Pak ${name}`;
-      }
-
-      if (isFemale) {
-        return `Halo Bu ${name}`;
-      }
-
-      return `Halo ${name}`;
+    if(user) {
+      return `${getGreetTime(language, time)} ${getUserGreet(user.name, language, user.gender)}`;
     }
-
-    if (isMorning) {
-      if (isMale && isFemale) {
-        return `Good morning ${name}`;
-      }
-
-      if (isFemale) {
-        return `Good morning Ms ${name}`;
-      }
-
-      return `Good morning ${name}`;
-    }
-
-    if (isAfternoon) {
-      return `good afternoon ${name}`;
-    }
-
-    if (isEvening) {
-      return `good evening ${name}`;
-    }
-
-    if (isNight) {
-      return `good night ${name}`;
-    }
-
-    if (isMale) {
-      return `wassup Mr ${name}`;
-    }
-
-    if (isFemale) {
-      return `wassup Ms ${name}`;
-    }
-
-    return `wassup ${name}`;
+    return `${getGreetTime(language, time)} ${getUserGreet(this.name, language, this.gender)}`;
   }
 
   static saveToDatabase(user: User) {
